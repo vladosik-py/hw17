@@ -76,7 +76,7 @@ genres_schema = GenreSchema(many=True)
 @movie_ns.route('/')
 class MoviesView(Resource):
 
-    def get_movies_all(self):
+    def get(self):
         """возвращает список всех фильмов"""
         movies_query = db.session.query(Movie)
 
@@ -90,7 +90,7 @@ class MoviesView(Resource):
 
         return movies_schema.dump(movies_query.all()), 200
 
-    def post_new_movie(self):
+    def post(self):
         """добавляет фильм в список"""
         request_json = request.json
         new_movie = Movie(**request_json)
@@ -104,14 +104,14 @@ class MoviesView(Resource):
 @movie_ns.route('/<int:uid>')
 class MovieView(Resource):
 
-    def get_movie_by_id(self, uid: int):
+    def get(self, uid: int):
         """возвращает подробную информацию о фильме по его id"""
         movie = db.session.query(Movie).get(uid)
         if not movie:
             return "Movie Not Found", 404
         return movie_schema.dump(movie), 200
 
-    def put_movie(self, uid: int):
+    def put(self, uid: int):
         """обновляет определенный фильм по его id"""
         updated_movie = db.session.query(Movie).filter(Movie.id == uid).update(request.json)
 
@@ -120,9 +120,9 @@ class MovieView(Resource):
 
         db.session.commit()
 
-        return "Movie Updated", 204
+        return "", 204
 
-    def delete_movie(self, uid: int):
+    def delete(self, uid: int):
         """удаляет определенный фильм по его id"""
         movie = db.session.query(Movie).get(uid)
         if not movie:
@@ -137,12 +137,12 @@ class MovieView(Resource):
 @director_ns.route('/')
 class DirectorsView(Resource):
 
-    def get_directors_all(self):
+    def get(self):
         """возвращает всех режиссеров"""
         all_directors = db.session.query(Director)
         return directors_schema.dump(all_directors), 201
 
-    def post_new_director(self):
+    def post(self):
         """добавляет режиссера в список"""
         request_json = request.json
         new_director = Director(**request_json)
@@ -156,7 +156,7 @@ class DirectorsView(Resource):
 @director_ns.route('/<int:uid>')
 class DirectorView(Resource):
 
-    def get_director_by_id(self, uid: int):
+    def get(self, uid: int):
         """возвращает подробную информацию о режиссере по его id"""
         try:
             director = db.session.query(Director).get(uid)
@@ -164,7 +164,7 @@ class DirectorView(Resource):
         except Exception:
             return str(Exception), 404
 
-    def put_director(self, uid: int):
+    def put(self, uid: int):
         """обновляет определенного режиссера по его id"""
         director = Director.query.get(uid)
         request_json = request.json
@@ -175,9 +175,9 @@ class DirectorView(Resource):
         db.session.add(director)
         db.session.commit()
 
-        return "Director Updated", 204
+        return "", 204
 
-    def delete_director(self, uid: int):
+    def delete(self, uid: int):
         """удаляет определенного режиссера по его id"""
         director = db.session.query(Director).get(uid)
         if not director:
@@ -192,12 +192,12 @@ class DirectorView(Resource):
 @genre_ns.route('/')
 class GenresView(Resource):
 
-    def get_genres_all(self):
+    def get(self):
         """возвращает все жанры"""
         all_genres = db.session.query(Genre)
         return genres_schema.dump(all_genres), 201
 
-    def post_new_genre(self):
+    def post(self):
         """добавляет жанр в список"""
         request_json = request.json
         new_genre = Genre(**request_json)
@@ -211,7 +211,7 @@ class GenresView(Resource):
 @genre_ns.route('/<int:uid>')
 class GenreView(Resource):
 
-    def get_genre_by_id(self, uid: int):
+    def get(self, uid: int):
         """возвращает подробную информацию о жанре по его id"""
         try:
             genre = db.session.query(Genre).get(uid)
@@ -219,7 +219,7 @@ class GenreView(Resource):
         except Exception:
             return str(Exception), 404
 
-    def put_genre(self, uid: int):
+    def put(self, uid: int):
         """обновляет определенный жанр по его id"""
         genre = Genre.query.get(uid)
         request_json = request.json
@@ -230,9 +230,9 @@ class GenreView(Resource):
         db.session.add(genre)
         db.session.commit()
 
-        return "Genre Updated", 204
+        return "", 204
 
-    def delete_genre(self, uid: int):
+    def delete(self, uid: int):
         """удаляет определенный жанр по его id"""
         genre = db.session.query(Genre).get(uid)
         if not genre:
